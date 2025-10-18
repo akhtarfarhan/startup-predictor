@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from custom_classes import AugmentWithBinaryProb
+from custom_classes import AugmentWithBinaryProb  # Ensure this import is present
 
 app = Flask(__name__)
 CORS(app)
@@ -22,11 +22,21 @@ if MODEL_URL and not os.path.exists(MODEL_PATH):
     response = requests.get(MODEL_URL)
     with open(MODEL_PATH, "wb") as f:
         f.write(response.content)
+
 try:
+    class CustomUnpickler(pickle.Unpickler):
+        def find_class(self, module, name):
+            if module == '__main__':
+                module = 'custom_classes'  # Redirect to the module where the class is defined
+            return super().find_class(module, name)
+
     with open(MODEL_PATH, "rb") as f:
-        model = pickle.load(f)
+        model = CustomUnpickler(f).load()
 except FileNotFoundError:
     print("Error: final_model.pkl could not be downloaded or found")
+    exit(1)
+except Exception as e:
+    print(f"Error loading model: {e}")
     exit(1)
 
 FEATURE_ORDER = [
