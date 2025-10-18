@@ -9,8 +9,13 @@ from custom_classes import AugmentWithBinaryProb
 app = Flask(__name__)
 CORS(app)
 
+# Health check endpoint for Render
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "healthy"}), 200
+
 # Load model
-MODEL_URL = ""  # Optional: Replace with Google Drive/Dropbox link if not using Git LFS
+MODEL_URL = ""  # Replace with Google Drive/Dropbox link if not using Git LFS
 MODEL_PATH = os.path.join("models", "final_model.pkl")
 if MODEL_URL and not os.path.exists(MODEL_PATH):
     os.makedirs("models", exist_ok=True)

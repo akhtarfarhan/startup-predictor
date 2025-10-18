@@ -1,9 +1,8 @@
 Flask==2.3.2
-pandas==2.2.2
+flask-cors==4.0.1
 scikit-learn==1.3.0
+pandas==2.0.3  # Older version for Python 3.11 compatibility
 lightgbm==4.1.2
-numpy==1.27.0
-flask
-flask-cors
-scikit-learn
-pandas  # If using CSV
+numpy==1.24.3  # Match scikit-learn compatibility
+gunicorn==22.0.0
+requests==2.31.0
