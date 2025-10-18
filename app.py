@@ -1,24 +1,29 @@
-# app.py
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import requests
 import pickle
 import os
 import pandas as pd
-from custom_transformers import AugmentWithBinaryProb
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from custom_classes import AugmentWithBinaryProb
 
 app = Flask(__name__)
-CORS(app)  # Allow cross-origin requests from frontend
+CORS(app)
 
 # Load model
+MODEL_URL = ""  # Optional: Replace with Google Drive/Dropbox link if not using Git LFS
 MODEL_PATH = os.path.join("models", "final_model.pkl")
+if MODEL_URL and not os.path.exists(MODEL_PATH):
+    os.makedirs("models", exist_ok=True)
+    response = requests.get(MODEL_URL)
+    with open(MODEL_PATH, "wb") as f:
+        f.write(response.content)
 try:
     with open(MODEL_PATH, "rb") as f:
         model = pickle.load(f)
 except FileNotFoundError:
-    print("Error: final_model.pkl not found in models/ directory")
+    print("Error: final_model.pkl could not be downloaded or found")
     exit(1)
 
-# Feature order
 FEATURE_ORDER = [
     "relationships",
     "funding_per_milestone",
@@ -36,7 +41,6 @@ FEATURE_ORDER = [
     "state_code_FL"
 ]
 
-# Prediction labels
 PREDICTION_LABELS = {
     0: "operating",
     1: "acquired",
@@ -47,16 +51,12 @@ PREDICTION_LABELS = {
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
-    print("Received payload:", data)  # Debug
-
-    # Build feature array in correct order
+    print("Received payload:", data)
     try:
         features = [float(data.get(f, 0)) for f in FEATURE_ORDER]
     except ValueError:
         return jsonify({"error": "All features must be numeric"}), 400
-
     try:
-        # Use DataFrame for model input
         features_df = pd.DataFrame([features], columns=FEATURE_ORDER)
         pred = model.predict(features_df)[0]
         confidence = (
@@ -67,7 +67,6 @@ def predict():
         label = PREDICTION_LABELS.get(pred, str(pred))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
     return jsonify({
         "prediction": label,
         "probability": float(confidence) if confidence is not None else None
@@ -93,4 +92,5 @@ def predict_csv():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
