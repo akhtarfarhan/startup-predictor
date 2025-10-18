@@ -2,17 +2,27 @@ import requests
 import pickle
 import os
 import pandas as pd
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from custom_classes import AugmentWithBinaryProb  # Ensure this import is present
+from custom_classes import AugmentWithBinaryProb
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', template_folder='.')
 CORS(app)
 
 # Health check endpoint for Render
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "healthy"}), 200
+
+# Serve static files (CSS, JS, HTML pages like manual.html, upload.html)
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('.', filename)
+
+# Serve root URL with index.html
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
 
 # Load model
 MODEL_URL = ""  # Replace with Google Drive/Dropbox link if not using Git LFS
@@ -27,7 +37,7 @@ try:
     class CustomUnpickler(pickle.Unpickler):
         def find_class(self, module, name):
             if module == '__main__':
-                module = 'custom_classes'  # Redirect to the module where the class is defined
+                module = 'custom_classes'
             return super().find_class(module, name)
 
     with open(MODEL_PATH, "rb") as f:
@@ -107,5 +117,5 @@ def predict_csv():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)
