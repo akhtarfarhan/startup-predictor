@@ -1,0 +1,240 @@
+/* style.css (unchanged from your original) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: radial-gradient(ellipse at top, #1a1a1f, #0f0f13);
+  color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 60px 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 780px;
+  background: rgba(25, 25, 35, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 48px 56px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+h1,
+h2 {
+  color: #a5b4fc;
+  margin-bottom: 12px;
+}
+
+h3 {
+  color: #c7d2fe;
+  margin-top: 36px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  text-align: left;
+}
+
+p {
+  color: #ccc;
+  margin-bottom: 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 28px;
+}
+
+.field {
+  position: relative;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #c7d2fe;
+  font-size: 14px;
+}
+
+input[type="number"],
+input[type="file"] {
+  background: #11121a;
+  border: 1px solid #3f3f46;
+  color: #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  width: 100%;
+  transition: 0.2s ease;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.onehot-section {
+  margin-top: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.tag {
+  background: #2d2e36;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 14px;
+}
+
+.tag.active,
+.tag:hover {
+  background: #6366f1;
+  color: white;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.btn {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border: none;
+  color: white;
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background: #374151;
+}
+
+a.back {
+  display: inline-block;
+  margin-top: 30px;
+  color: #818cf8;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+a.back:hover {
+  text-decoration: underline;
+}
+
+/* === Tooltip Styles === */
+.info-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: #0b0d14;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  cursor: default;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.tooltip {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  max-width: 420px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #e5e7eb;
+  background: linear-gradient(180deg, #0c0f1a, #0b0d14);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 10;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 12px;
+  border: 8px solid transparent;
+  border-top-color: rgba(99, 102, 241, 0.35);
+}
+.tooltip::before {
+  content: "";
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 12px;
+  border: 8px solid transparent;
+  border-top-color: #0b0d14;
+}
+
+.field:hover .tooltip,
+.field:focus-within .tooltip,
+.info-dot:focus + .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Animation */
+.fade-in {
+  animation: fadeIn 0.7s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .container {
+    padding: 36px 24px;
+  }
+}

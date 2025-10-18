@@ -1,0 +1,29 @@
+<!-- upload.html (CSV upload page) -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload CSV</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container fade-in">
+      <h2>Upload CSV for Prediction</h2>
+      <form id="uploadForm">
+        <div class="file-upload">
+          <input type="file" id="csvFile" accept=".csv" required />
+        </div>
+        <div class="buttons">
+          <button type="submit" class="btn">Upload & Predict</button>
+          <button type="reset" class="btn secondary">Reset</button>
+        </div>
+      </form>
+
+      <div id="uploadResult" style="margin-top: 20px; color: #a5b4fc; text-align: center;"></div>  <!-- Display result here -->
+
+      <a href="index.html" class="back">← Back to Home</a>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

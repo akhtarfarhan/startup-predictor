@@ -1,0 +1,1 @@
+class AugmentWithBinaryProb(BaseEstimator, TransformerMixin):

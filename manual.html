@@ -1,0 +1,198 @@
+<!-- manual.html (Manual entry page, updated with real categories and data-group for JS) -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manual Entry | Model Prediction</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container fade-in">
+      <h2>Manual Data Entry</h2>
+
+      <form id="predictionForm">
+        <!-- ===== CORE FEATURES ===== -->
+        <h3>Core Features</h3>
+        <div class="grid">
+          <div class="field">
+            <label for="relationships">
+              Relationships
+              <span class="info-dot" tabindex="0">i</span>
+              <div class="tooltip">
+                Normalized measure of investor/partner connections (e.g.,
+                network centrality or scaled count). Use the same scaling used
+                during model training.
+              </div>
+            </label>
+            <input
+              id="relationships"
+              name="relationships"
+              type="number"
+              step="any"
+              placeholder="e.g., 0.16"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="funding_per_milestone">
+              Funding per Milestone
+              <span class="info-dot" tabindex="0">i</span>
+              <div class="tooltip">
+                Average funding per round (or per year) used in training,
+                already standardized. Negative values can occur after z-scaling.
+              </div>
+            </label>
+            <input
+              id="funding_per_milestone"
+              name="funding_per_milestone"
+              type="number"
+              step="any"
+              placeholder="e.g., -0.19"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="mean_funding_by_country">
+              Mean Funding by Country
+              <span class="info-dot" tabindex="0">i</span>
+              <div class="tooltip">
+                Mean of all funding amounts associated with the company,
+                preprocessed with the same scaler.
+              </div>
+            </label>
+            <input
+              id="mean_funding_by_country"
+              name="mean_funding_by_country"
+              type="number"
+              step="any"
+              placeholder="e.g., -1.05"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="founded_year">
+              Founded Year
+              <span class="info-dot" tabindex="0">i</span>
+              <div class="tooltip">
+                Calendar year the company was founded (or standardized numeric
+                feature used by the model). If standardized, input the scaled
+                value.
+              </div>
+            </label>
+            <input
+              id="founded_year"
+              name="founded_year"
+              type="number"
+              step="any"
+              placeholder="e.g., 0.11"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="founded_month">
+              Founded Month
+              <span class="info-dot" tabindex="0">i</span>
+              <div class="tooltip">
+                Month the company was founded (1–12) or the normalized
+                equivalent used in training.
+              </div>
+            </label>
+            <input
+              id="founded_month"
+              name="founded_month"
+              type="number"
+              step="any"
+              placeholder="e.g., 0.49"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="milestone_duration">
+              Milestone Duration
+              <span class="info-dot" tabindex="0">i</span>
+              <div class="tooltip">
+                Time difference (days/months) between key milestones,
+                transformed and scaled for the model. Keep the exact
+                transformation used during training.
+              </div>
+            </label>
+            <input
+              id="milestone_duration"
+              name="milestone_duration"
+              type="number"
+              step="any"
+              placeholder="e.g., -0.16"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- ===== CATEGORICALS ===== -->
+        <h3>Categoricals (One-Hot Encoded)</h3>
+        <div class="onehot-section">
+          <label>
+            Category
+            <span class="info-dot" tabindex="0">i</span>
+            <div class="tooltip">
+              Select one of the predefined business categories. “None” keeps all
+              category dummies at 0.
+            </div>
+          </label>
+          <div class="tags" data-group="category">
+            <button type="button" class="tag">consulting</button>
+            <button type="button" class="tag">ecommerce</button>
+            <button type="button" class="tag">enterprise</button>
+            <button type="button" class="tag">software</button>
+            <button type="button" class="tag active">None</button>
+          </div>
+
+          <label>
+            Country
+            <span class="info-dot" tabindex="0">i</span>
+            <div class="tooltip">
+              Choose the country group used in training. “None” means the
+              country is not in known categories.
+            </div>
+          </label>
+          <div class="tags" data-group="country">
+            <button type="button" class="tag">GBR</button>
+            <button type="button" class="tag">IND</button>
+            <button type="button" class="tag">USA</button>
+            <button type="button" class="tag active">None</button>
+          </div>
+
+          <label>
+            State
+            <span class="info-dot" tabindex="0">i</span>
+            <div class="tooltip">
+              Optional subdivision within a country. Select “None” if not
+              applicable.
+            </div>
+          </label>
+          <div class="tags" data-group="state">
+            <button type="button" class="tag">FL</button>
+            <button type="button" class="tag active">None</button>
+          </div>
+        </div>
+
+        <!-- ===== ACTION BUTTONS ===== -->
+        <div class="buttons">
+          <button type="submit" class="btn">Predict</button>
+          <button type="reset" class="btn secondary">Reset</button>
+        </div>
+      </form>
+
+      <div id="predictionResult" style="margin-top: 20px; color: #a5b4fc; text-align: center;"></div>  <!-- Display result here -->
+
+      <a href="index.html" class="back">← Back to Home</a>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
