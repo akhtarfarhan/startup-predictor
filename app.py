@@ -1,24 +1,22 @@
-# app.py (Flask API, updated with CSV endpoint and prediction labels)
+# app.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pickle
 import os
 import pandas as pd
-
-# Custom class if needed
-class AugmentWithBinaryProb:
-    def transform(self, X):
-        return X
-    def fit(self, X, y=None):
-        return self
+from custom_transformers import AugmentWithBinaryProb
 
 app = Flask(__name__)
 CORS(app)  # Allow cross-origin requests from frontend
 
 # Load model
 MODEL_PATH = os.path.join("models", "final_model.pkl")
-with open(MODEL_PATH, "rb") as f:
-    model = pickle.load(f)
+try:
+    with open(MODEL_PATH, "rb") as f:
+        model = pickle.load(f)
+except FileNotFoundError:
+    print("Error: final_model.pkl not found in models/ directory")
+    exit(1)
 
 # Feature order
 FEATURE_ORDER = [
@@ -38,7 +36,7 @@ FEATURE_ORDER = [
     "state_code_FL"
 ]
 
-# Prediction labels (adjust based on your model's output classes)
+# Prediction labels
 PREDICTION_LABELS = {
     0: "operating",
     1: "acquired",
@@ -58,13 +56,15 @@ def predict():
         return jsonify({"error": "All features must be numeric"}), 400
 
     try:
-        pred = model.predict([features])[0]
+        # Use DataFrame for model input
+        features_df = pd.DataFrame([features], columns=FEATURE_ORDER)
+        pred = model.predict(features_df)[0]
         confidence = (
-            model.predict_proba([features])[0].max()
+            model.predict_proba(features_df)[0].max()
             if hasattr(model, "predict_proba")
             else None
         )
-        label = PREDICTION_LABELS.get(pred, str(pred))  # Map to string label
+        label = PREDICTION_LABELS.get(pred, str(pred))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -80,7 +80,6 @@ def predict_csv():
     file = request.files['file']
     try:
         df = pd.read_csv(file)
-        # Ensure all features present, fill missing with 0, reorder
         for col in FEATURE_ORDER:
             if col not in df.columns:
                 df[col] = 0
