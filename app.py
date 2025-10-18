@@ -7,7 +7,7 @@ from flask_cors import CORS
 from custom_classes import AugmentWithBinaryProb
 
 app = Flask(__name__, static_folder='.', template_folder='.')
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://startup-predictor-9g08.onrender.com"}})
 
 # Health check endpoint for Render
 @app.route("/health", methods=["GET"])
