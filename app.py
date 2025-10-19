@@ -7,7 +7,8 @@ from flask_cors import CORS
 from custom_classes import AugmentWithBinaryProb
 
 app = Flask(__name__, static_folder='.', template_folder='.')
-CORS(app, resources={r"/*": {"origins": "https://startup-predictor-9g08.onrender.com"}})
+# Allow CORS for deployed and local origins
+CORS(app, resources={r"/*": {"origins": ["https://startup-predictor-9g08.onrender.com", "http://127.0.0.1:10000", "http://localhost:10000"]}})
 
 # Health check endpoint for Render
 @app.route("/health", methods=["GET"])
@@ -104,6 +105,7 @@ def predict_csv():
     file = request.files['file']
     try:
         df = pd.read_csv(file)
+        print("Received CSV with columns:", df.columns.tolist())  # Debug log
         for col in FEATURE_ORDER:
             if col not in df.columns:
                 df[col] = 0
@@ -112,10 +114,12 @@ def predict_csv():
         confidences = model.predict_proba(df).max(axis=1) if hasattr(model, "predict_proba") else [None] * len(df)
         df['prediction'] = [PREDICTION_LABELS.get(p, str(p)) for p in predictions]
         df['confidence'] = confidences
+        print("Predictions:", df[['prediction', 'confidence']].to_dict(orient='records'))  # Debug log
         return df.to_json(orient='records')
     except Exception as e:
+        print("CSV prediction error:", str(e))  # Debug log
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=True)
