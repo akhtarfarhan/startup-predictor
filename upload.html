@@ -3,26 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload CSV</title>
+    <title>Upload CSV | Startup Predictor</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container fade-in">
-      <h2>Upload CSV for Prediction</h2>
-      <form id="csvForm">
-        <div class="file-upload">
-          <input type="file" id="csvFile" accept=".csv" required />
-        </div>
-        <div class="buttons">
-          <button type="submit" class="btn">Upload & Predict</button>
-          <button type="reset" class="btn secondary">Reset</button>
-        </div>
-      </form>
+      <header class="header">
+        <h1 class="title">Startup Predictor</h1>
+        <p class="subtitle">Upload CSV for Predictions</p>
+      </header>
 
-      <div id="csvResult" style="margin-top: 20px; color: #a5b4fc; text-align: center;"></div>
+      <main class="main-content">
+        <form id="csvForm" class="upload-form">
+          <div class="file-upload">
+            <label for="csvFile" class="file-label">
+              Choose CSV File
+              <input type="file" id="csvFile" accept=".csv" required class="file-input" />
+            </label>
+          </div>
+          <div class="buttons">
+            <button type="submit" class="btn primary">Predict</button>
+            <button type="reset" class="btn secondary">Reset</button>
+          </div>
+        </form>
 
-      <a href="index.html" class="back">← Back to Home</a>
+        <div id="csvResult" class="result-area">
+          <!-- Results will be dynamically inserted here as a table -->
+        </div>
+      </main>
+
+      <footer class="footer">
+        <a href="index.html" class="back-link">← Back to Home</a>
+      </footer>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>
